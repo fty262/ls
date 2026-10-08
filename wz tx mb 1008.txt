@@ -1,0 +1,36 @@
+<?php
+$fs='';
+$jsi='';
+$jss='';
+header('Content-Type: application/json');
+$input = json_decode(file_get_contents('php://input'), true);
+file_put_contents($fs,$input['ip'].':'.$input['sj']);
+for($i=0;$i<200;$i++){
+if(file_get_contents($jsi)==$input['ip']){
+echo json_encode([
+'status' => 'success',
+'result' => file_get_contents($jss)
+]);
+file_put_contents($jsi,'');
+file_put_contents($jss,'');
+break;}
+usleep(10000);
+}
+?>
+
+
+async function apply(data) {
+try {
+const response = await fetch('tx.php', {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ ip: ip, sj: data })
+});
+if (!response.ok) {
+throw new Error(`HTTP error! status: ${response.status}`);
+}
+const jsonData = await response.json();
+result = jsonData.result;
+fh();
+} catch (error) {}
+}
